@@ -1,0 +1,174 @@
+<!doctype html>
+<html>
+  <head>
+    <script src='src/FlexUI.js'></script>
+    <style>
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      body > div {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+
+    <script>
+
+      var examples = [];
+
+      function makeDiv() {
+        return document.createElement('div');
+      }
+
+      function makeButton(name, action) {
+        var el = document.createElement('button');
+        el.textContent = name;
+        el.onclick = action;
+        return el;
+      }
+
+      function decorate(frame) {
+        frame.elem.style.background = 'rgb(' +
+          Math.floor(128 + Math.random() * 128) + ', ' +
+          Math.floor(128 + Math.random() * 128) + ', ' +
+          Math.floor(128 + Math.random() * 128) + ')';
+        return frame;
+      }
+
+      function ctrl(item) {
+        item.elem.appendChild(makeButton('delete', function() {
+          if (item.parent)
+            item.deleteSelf();
+        }));
+
+        item.elem.appendChild(makeButton('split', function() {
+          item.replaceSelf(item.constructor([
+            ctrl(item.constructor()),
+            ctrl(item.constructor())
+          ]));
+        }));
+
+        item.elem.appendChild(makeButton('+before', function() {
+          ctrl(item.insertBeforeSelf());
+        }));
+        item.elem.appendChild(makeButton('+after', function() {
+          ctrl(item.insertAfterSelf());
+        }));
+
+        decorate(item);
+
+        return item;
+      }
+
+      examples.push({
+        name: 'frames-fixed',
+        init: function() {
+          FlexUI.installDefaultCSS();
+
+          var frame = FlexUI.frame([
+            decorate(FlexUI.frame()),
+            FlexUI.frame([
+              decorate(FlexUI.frame()),
+              decorate(FlexUI.frame())
+            ]),
+            FlexUI.frame([
+              decorate(FlexUI.frame()),
+              decorate(FlexUI.frame()),
+              decorate(FlexUI.frame())
+            ])
+          ]);
+          document.body.appendChild(frame.elem);
+        }
+      });
+
+      examples.push({
+        name: 'frames-resizable',
+        init: function() {
+          FlexUI.installDefaultCSS();
+
+          var frame = FlexUI.frame([
+            FlexUI.frame(),
+            FlexUI.separator(),
+            FlexUI.frame([
+              FlexUI.frame(),
+              FlexUI.separator(),
+              FlexUI.frame([
+                FlexUI.frame(),
+                FlexUI.separator(),
+                FlexUI.frame()
+              ]),
+              FlexUI.separator(),
+              FlexUI.frame()
+            ])
+          ]);
+          document.body.appendChild(frame.elem);
+        }
+      });
+
+      examples.push({
+        name: 'frames-dynamic',
+        init: function() {
+          FlexUI.installDefaultCSS();
+
+          var frame = FlexUI.frame([
+            ctrl(FlexUI.frame()),
+            ctrl(FlexUI.frame())
+          ]);
+          document.body.appendChild(frame.elem);
+        }
+      });
+
+      examples.push({
+        name: 'areas-dynamic',
+        init: function() {
+          FlexUI.installDefaultCSS();
+
+          var area = FlexUI.area([
+            ctrl(FlexUI.area()),
+            FlexUI.area([
+              ctrl(FlexUI.area()),
+              FlexUI.area([
+                ctrl(FlexUI.area()),
+                ctrl(FlexUI.area()),
+                ctrl(FlexUI.area())
+              ])
+            ]),
+            ctrl(FlexUI.area())
+          ]);
+          document.body.appendChild(area.elem);
+        }
+      });
+
+      function initExample(example) {
+        document.body.textContent = '';
+        example.init();
+      }
+
+      if (window.location.hash) {
+        for (var i=0; i<examples.length; i++) {
+          if ('#' + examples[i].name == window.location.hash) {
+            initExample(examples[i]);
+            break;
+          }
+        }
+      }
+      else {
+        examples.forEach(function(example) {
+          var btn = makeButton(example.name, function() {
+            window.location.hash = example.name;
+            initExample(example);
+          });
+          document.body.appendChild(btn);
+        });
+      }
+
+
+    </script>
+  </body>
+</html>
+

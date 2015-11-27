@@ -1,0 +1,11 @@
+{
+  "name": "flexui",
+  "version": "0.1.0",
+  "description": "Flexible UI layout using Flexbox",
+  "main": "src/FlexUI.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Robin Allen <r@foon.uk> (http://foon.uk/)",
+  "license": "AGPL-3.0"
+}

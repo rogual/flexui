@@ -1,0 +1,198 @@
+<!doctype html>
+<html>
+  <meta charset='utf-8'>
+  <head>
+    <script src='src/FlexUI.js'></script>
+    <style>
+      * { box-sizing: border-box; }
+
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      body > div {
+        width: 100%;
+        height: 100%;
+      }
+
+      /* FlexUI leaves the layout & design of UI elements like tab bars
+         up to you. These are common styles used by all example themes: */
+      .flexui-tab-bar {
+        flex-grow: 0;
+        flex-shrink: 0;
+      }
+      .flexui-tab-bar + div {
+        display: flex;
+        flex-grow: 1;
+      }
+
+      .flexui-tab {
+          display: inline-block;
+      }
+      .flexui-space {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+      }
+      .example-panel {
+        width: 100%;
+      }
+
+      .flexui-space {
+        position: relative;
+      }
+
+      .flexui-drop-indicator {
+        background: blue;
+      }
+
+      .flexui-drop-indicator-newtab {
+        width: 5px;
+        height: 100%;
+        display: inline-block;
+      }
+
+      .flexui-drop-indicator-edge {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+      }
+
+      .flexui-drop-indicator-edge.flexui-drop-indicator-top {
+        height: 10px;
+      }
+
+      .flexui-drop-indicator-edge.flexui-drop-indicator-bottom {
+        height: 10px; top: auto;
+      }
+
+      .flexui-drop-indicator-edge.flexui-drop-indicator-left {
+        width: 10px;
+      }
+
+      .flexui-drop-indicator-edge.flexui-drop-indicator-right {
+        width: 10px; left: auto;
+      }
+
+      /* And here are a couple of themes which you can choose in the
+         settings panel. */
+      body.s-basic .flexui-tab-bar {
+          background: #ccc;
+      }
+      body.s-basic .flexui-tab {
+          background: #eee;
+          padding: 2px 5px;
+          height: 24px;
+          margin: 5px 5px 0;
+          cursor: pointer;
+      }
+      body.s-basic .flexui-tab.flexui-active {
+          background: white;
+      }
+
+      body.s-1995 {
+        font-family: Tahoma, Verdana, sans-serif;
+        font-size: 15px;
+        cursor: default;
+      }
+      body.s-1995 .flexui-tab-bar {
+          background: teal;
+      }
+      body.s-1995 button {
+          border: 1px outset;
+          background: #ccc;
+      }
+      body.s-1995 .flexui-tab {
+          border: 1px outset;
+          text-align: center;
+          width: 120px;
+          background: #ccc;
+          border-radius: 4px 4px 0 0;
+          margin: 5px 5px 0;
+          padding: 2px 5px;
+          height: 26px;
+      }
+      body.s-1995 .flexui-tab.flexui-active {
+          font-weight: bold;
+      }
+      body.s-1995 .example-panel {
+          background: #ccc;
+      }
+      body.s-1995 .flexui-separator {
+        flex-basis: 5px;
+        border: 1px outset;
+        background: #ccc;
+      }
+
+    </style>
+  </head>
+  <body class='s-basic'>
+
+    <script>
+
+      function makeDiv() {
+        return document.createElement('div');
+      }
+
+      function makeButton(name, action) {
+        var el = document.createElement('button');
+        el.textContent = name;
+        el.onclick = action;
+        return el;
+      }
+
+      FlexUI.installDefaultCSS();
+
+      function findLeaf(space) {
+        if (space.isLeaf)
+          return space;
+        if (space.children) for (var i in space.children) {
+          var child = space.children[i];
+          var r = findLeaf(child);
+          if (r)
+            return r;
+        }
+      }
+
+      function openDocument() {
+        var panel = mkpanel('Document', Math.random());
+        panel.closable = true;
+        findLeaf(toolsPanel.space.getRoot()).addPanel(panel);
+      }
+
+      function mkpanel(name, text) {
+        var div = makeDiv();
+        div.className = 'example-panel';
+        div.style.padding = '10px';
+        div.textContent = text || (name + ' would go here');
+        return {name: name, elem: div};
+      }
+
+      var docsSpace = FlexUI.leafSpace([]);
+
+      var toolsPanel = mkpanel('Tools');
+      toolsPanel.elem.textContent = '';
+      toolsPanel.elem.appendChild(makeButton('open document', openDocument));
+
+      var settingsPanel = mkpanel('Settings');
+      settingsPanel.elem.textContent = 'styles:';
+      ['basic', '1995'].forEach(function(style) {
+        settingsPanel.elem.appendChild(makeButton(style, function() {
+          document.body.className = 's-' + style;
+        }));
+      });
+
+      var space = window.s = FlexUI.splitSpace([
+        docsSpace,
+        FlexUI.leafSpace([toolsPanel, settingsPanel])
+      ]);
+
+      openDocument();
+      openDocument();
+
+      document.body.appendChild(space.elem);
+    </script>
+  </body>
+</html>
+
