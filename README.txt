@@ -121,7 +121,8 @@ Space: OriTree
   UI panel layout.
 
   Constructors:
-    | space = FlexUI.space([childSpaces])
+    | space = FlexUI.splitSpace(childSpaces)
+    | space = FlexUI.leafSpace(panels)
 
   Properties:
     | space.panels
