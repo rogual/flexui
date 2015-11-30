@@ -45,9 +45,12 @@ Theming
 
 Caveats
 
-  Do not keep references to Spaces -- FlexUI removes Spaces all the time when
+* Do not keep references to Spaces -- FlexUI removes Spaces all the time when
   it's reshuffling the tree and your references will become invalid very
   quickly.
+
+* While this rudimentary documentation exists, this is very much one of those
+  “read the code” projects. The examples might be a good place to start.
 
 API Reference follows.
 
@@ -148,3 +151,22 @@ Drag & Drop Helpers
 
   Elements which have been made into drag sources can be dragged to spaces.
   Their associated panels will then move to the chosen space.
+
+Space Delegate
+
+    You can replace the Space Delegate using FlexUI.setSpaceDelegate(newDg).
+    The default Space Delegate is FlexUI.tabSpaceDelegate.
+
+    Methods:
+      | delegate.init(space)
+      | delegate.modified(space)
+      | delegate.setPanels(space, panels)
+      | delegate.setActivePanel(space, panel, index)
+
+      | delegate.panelDraggedOver(event)
+      | delegate.panelDraggingOver(event)
+      | delegate.panelDraggedOut(event)
+      | delegate.panelDropped(event)
+
+      | delegate.makeTab(space, panel)
+      | delegate.buildTabBar(space)
