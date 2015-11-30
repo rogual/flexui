@@ -1,5 +1,10 @@
 FlexUI v0.1
 
+Example: https://cdn.rawgit.com/rogual/flexui/master/ui-example.html
+
+This implements a non-overlapping tabbed UI for Javascript. It's early days
+and, while it should work, you can easily break it by writing to properties
+you shouldn't.
 
 Spaces and Panels
 
@@ -24,6 +29,15 @@ Spaces and Panels
             - Tabstrip element itself can be customized
         - Otherwise, custom UI and drop targets can be defined.
 
+Theming
+
+  Theming is by way of CSS -- see ui-example.html
+
+Caveats
+
+  Do not keep references to Spaces -- FlexUI removes Spaces all the time when
+  it's reshuffling the tree and your references will become invalid very
+  quickly.
 
 API Reference follows.
 
@@ -32,17 +46,6 @@ Utility functions
   FlexUI.installDefaultCSS()
 
     Call this before using FlexUI.
-
-Drag & Drop
-
-  Utilities for allowing users to drag panels between Spaces.
-
-  Functions:
-    | FlexUI.makeDragSource(elem, panel)
-    | FlexUI.removeDragSource(elem)
-
-  Elements which have been made into drag sources can be dragged to spaces.
-  Their associated panels will then move to the chosen space.
 
 OriTree interface
 
@@ -61,10 +64,15 @@ OriTree interface
 
   Methods:
     | oritree.insertBeforeIndex(i[, oritree])
+    | oritree.insertAfterIndex(i[, oritree])
+    | oritree.insertBeforeChild(existingChild[, oritree])
+    | oritree.insertAfterChild(existingChild[, oritree])
     | oritree.insertBeforeSelf([oritree])
     | oritree.insertAfterSelf([oritree])
     | oritree.deleteSelf()
     | oritree.replaceSelf(oritree)
+    | oritree.getRoot()
+    | oritree.normalize() -- call after deleting children
 
 Frame: OriTree
 
@@ -107,5 +115,26 @@ Space: OriTree
     | space.activePanel
 
   Methods:
+    | space.addPanel(panel)
+    | space.removePanel(panel)
     | space.setActivePanel([panel | index | null])
 
+Panel
+
+  Panels are plain Javascript objects. Each panel needs to have an 'elem'
+  property referring to its HTML element. The default tabbed space delegate
+  also expects panels to have 'name' and 'closable' properties.
+
+  FlexUI will also create and maintain a 'space' property on each panel.
+
+Drag & Drop Helpers
+
+  Utilities for allowing users to drag panels between Spaces. If you are
+  using the default tabbed space delegate, you probably won't need these.
+
+  Functions:
+    | FlexUI.makeDragSource(elem, panel)
+    | FlexUI.removeDragSource(elem)
+
+  Elements which have been made into drag sources can be dragged to spaces.
+  Their associated panels will then move to the chosen space.
