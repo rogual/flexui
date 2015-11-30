@@ -48,6 +48,9 @@ if (this.module)
      either insertBeforeIndex or insertAfterIndex, and implement
      the parent and children properties, and maybe other stuff. */
   function addTreeMethods(item) {
+
+    item.modified = function() {};
+
     item.insertBeforeSelf = function(newItem) {
       var i = item.parent.children.indexOf(item);
       return item.parent.insertBeforeIndex(i, newItem);
@@ -437,6 +440,7 @@ if (this.module)
      This is the default delegate, which implements a tab bar in each
      space. */
   FlexUI.tabSpaceDelegate = {
+    modified: function(space) {},
     init: function(space) {
       space.dd = {};
 
@@ -663,6 +667,10 @@ if (this.module)
     dropIndicator.className = 'flexui-drop-indicator';
   })();
 
+  function spaceModified(space) {
+    spaceDelegate.modified(space);
+  }
+
   var spaceDelegate = FlexUI.tabSpaceDelegate;
 
   /* Call this to set your own space delegate. You might want to inherit
@@ -688,8 +696,11 @@ if (this.module)
 
     var old = space.removeSelf;
     space.removeSelf = function() {
+      var parent = space.parent;
       space.area.removeSelf();
       old();
+      if (parent)
+        spaceModified(parent);
     };
 
     spaceDelegate.init(space);
@@ -736,6 +747,8 @@ if (this.module)
       space.children.splice(i, 0, newSpace);
       space.area.insertBeforeIndex(i, newSpace.area);
       newSpace.parent = space;
+
+      spaceModified(space);
     };
 
     return space;
@@ -788,6 +801,8 @@ if (this.module)
 
       var index = space.panels.indexOf(panel);
       spaceDelegate.setActivePanel(space, panel, index);
+
+      spaceModified(space);
     };
 
     if (panels.length)
@@ -809,6 +824,8 @@ if (this.module)
       if (panels.length == 1)
         space.setActivePanel(0);
       newPanel.space = space;
+
+      spaceModified(space);
       return newPanel;
     };
 
@@ -831,6 +848,8 @@ if (this.module)
         if (activePanel)
           space.setActivePanel(activePanel);
       }
+
+      spaceModified(space);
     };
 
     return space;
