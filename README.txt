@@ -9,7 +9,16 @@ you shouldn't.
 Spaces and Panels
 
   Spaces are arranged in a tree. Split spaces have 2 or more children; leaf
-  spaces have 0 or more panels.
+  spaces have 1 or more panels.
+
+  Split spaces can be horizontal or vertical. Each split space is the
+  opposite orientation from its parent.
+
+  The above constraints are enforced by the function space.normalize(), or
+  its recursive version space.normalizeTree(). These are usually called for
+  you at the right times, but if you are reaching in and deleting spaces or
+  moving panels around from code, you will need to normalize any spaces you
+  touch if you want your tree to stay nice.
 
   Inside each Space, one Panel can be active, and is displayed in the space.
 
@@ -31,7 +40,8 @@ Spaces and Panels
 
 Theming
 
-  Theming is by way of CSS -- see ui-example.html
+  Theming is by way of CSS -- see ui-example.html which implements two
+  themes.
 
 Caveats
 
@@ -55,7 +65,7 @@ OriTree interface
     | Node's direction must be different from its parent's direction
     | Root node can have either direction
 
-  Implementations: Frame, Area
+  Implementations: Frame, Area, Space
 
   Properties:
     | oritree.parent
