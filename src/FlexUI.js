@@ -546,7 +546,7 @@ if (this.module)
         var dropAxis = ['column', 'row', 'column', 'row'][drop.edge];
 
         var newSpace = FlexUI.leafSpace([]);
-        var newSplit, copySpace;
+        var newSplit, copySpace, active, panel;
 
         if (!space.parent) {
           if (space.children) {
@@ -572,6 +572,24 @@ if (this.module)
             }
           }
           else {
+
+            active = space.activePanel;
+            copySpace = FlexUI.leafSpace([]);
+            while (space.panels.length) {
+              panel = space.panels[0];
+              copySpace.addPanel(panel);
+            }
+
+            if (drop.edge == 0 || drop.edge == 3)
+              newSplit = FlexUI.splitSpace([newSpace, copySpace]);
+            else
+              newSplit = FlexUI.splitSpace([copySpace, newSpace]);
+
+            newSplit.setDirection(dropAxis);
+
+            space.replaceSelf(newSplit);
+
+            copySpace.setActivePanel(active);
           }
         }
         else {
@@ -590,11 +608,10 @@ if (this.module)
             }
             else {
 
-              var active = space.activePanel;
-              console.log('active is', active && active.elem);
+              active = space.activePanel;
               copySpace = FlexUI.leafSpace([]);
               while (space.panels.length) {
-                var panel = space.panels[0];
+                panel = space.panels[0];
                 copySpace.addPanel(panel);
               }
 
