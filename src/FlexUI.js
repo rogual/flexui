@@ -5,6 +5,10 @@ if (this.module)
 
 (function() {
 
+  // -- Global Config --
+
+  FlexUI.dragThreshold = 10;
+
   // -- Utility --
 
   function assert(cond, error) {
@@ -901,8 +905,13 @@ if (this.module)
     var overSpace = null;
     var targetSpace = null;
 
+    var distance = 0;
+
     function move(moveEvent) {
       moveEvent.preventDefault();
+
+      if (++distance < FlexUI.dragThreshold)
+        return;
 
       var x = moveEvent.clientX;
       var y = moveEvent.clientY;
