@@ -692,6 +692,10 @@ if (this.module)
       if (!panel)
         return;
       coTabBar.appendChild(panel.elem);
+
+      panel.elem.classList.add('flexui-panel');
+      panel.elem.flexuiPanel = panel;
+
       tabs.forEach(function(tab, i) {
         if (i == index)
           tab.classList.add('flexui-active');
@@ -779,6 +783,7 @@ if (this.module)
 
     space.elem = space.area.elem;
     space.elem.classList.add('flexui-space');
+    space.elem.flexuiSpace = space;
 
     space.insertBeforeIndex = function(i, newSpace) {
       if (newSpace.parent)
