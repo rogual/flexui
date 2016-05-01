@@ -302,7 +302,7 @@ if (this.module)
       window.addEventListener('mousemove', move);
       window.addEventListener('mouseup', up);
     });
-  }
+  };
 
   /* Adds a <style> element to the document's <head> with some default
      CSS for FlexUI. Options are:
@@ -404,7 +404,6 @@ if (this.module)
 
     area.insertBeforeIndex = function(i, newArea) {
       newArea = newArea || FlexUI.area();
-      var refArea = area.children[i];
 
       area.children.splice(i, 0, newArea);
 
@@ -481,7 +480,6 @@ if (this.module)
       var rect = event.space.elem.getBoundingClientRect();
       var x = event.moveEvent.clientX;
       var y = event.moveEvent.clientY;
-      var pos = [x, y];
 
       var edgeDistances = [
         y - rect.top,
@@ -784,8 +782,9 @@ if (this.module)
       elem: area.elem
     });
 
+    space.elem.flexuiSpace = space;
+
     /* Normalize a leaf space */
-    var old = space.normalize;
     space.normalize = function() {
       if (space.panels.length == 0) {
         space.activePanel = null;
