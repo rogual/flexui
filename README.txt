@@ -1,4 +1,4 @@
-FlexUI v0.1
+FlexUI v0.2
 
 Example: https://cdn.rawgit.com/rogual/flexui/master/ui-example.html
 
@@ -153,6 +153,13 @@ Drag & Drop Helpers
   Elements which have been made into drag sources can be dragged to spaces.
   Their associated panels will then move to the chosen space.
 
+    | FlexUI.makeDragHandle(dragElem, separator)
+
+  Makes an element behave as if it were a separator between two spaces. The
+  separator argument should be the separator element the dragElem should
+  behave as, or a function returning such. While the function returns null,
+  the element will not function as a separator.
+
 Space Delegate
 
     You can replace the Space Delegate using FlexUI.setSpaceDelegate(newDg).
@@ -171,3 +178,6 @@ Space Delegate
 
       | delegate.makeTab(space, panel)
       | delegate.buildTabBar(space)
+
+      | delegate.layout()
+      | delegate.focusPanel(panel)
