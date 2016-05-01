@@ -233,10 +233,18 @@ if (this.module)
 
   // -- Dragging handles to resize frames --
 
-  function setupDragging(sep) {
+  FlexUI.makeDragHandle = function(dragElem, sep) {
 
-    sep.addEventListener('mousedown', function(downEvent) {
+    sep = sep || dragElem;
+
+    dragElem.addEventListener('mousedown', function(downEvent) {
       downEvent.preventDefault();
+
+      if (typeof(sep) == 'function')
+        sep = sep(dragElem);
+
+      if (!sep)
+        return;
 
       var parent = sep.parentElement;
       var prev = sep.previousElementSibling;
@@ -315,6 +323,7 @@ if (this.module)
       '.flexui-leaf { flex-grow: 1 }\n' +
       '.flexui-h > .flexui-separator { cursor: ew-resize; }\n' +
       '.flexui-v > .flexui-separator { cursor: ns-resize; }\n' +
+      '.flexui-v > .flexui-separator + .flexui-space > .flexui-tab-bar { cursor: ns-resize; }\n' +
       ''
     ).replace(/\$\(hit\)/g, options.hit || 2)
      .replace(/\$\(thickness\)/g, options.thickness || 1);
@@ -332,7 +341,7 @@ if (this.module)
     elem.style.flexGrow = '0';
     elem.style.flexShrink = '0';
     elem.style.position = 'relative';
-    setupDragging(elem);
+    FlexUI.makeDragHandle(elem);
 
     return frame;
   };
@@ -451,9 +460,17 @@ if (this.module)
 
         var coTabBar = space.dd.coTabBar = makeDiv();
         space.elem.appendChild(coTabBar);
+
+        /* The tab bar itself is also a conditional drag handle: whenever it's
+           in a vertical space and there is a next space */
+        FlexUI.makeDragHandle(tabBar, function() {
+          var sep = tabBar.parentElement.previousSibling;
+          if (sep && sep.parentElement.classList.contains('flexui-v'))
+            return sep;
+        });
       }
 
-      var tabs = space.dd.tabs = [];
+      space.dd.tabs = [];
     },
     panelDraggedOver: function(event) {
     },
@@ -878,6 +895,7 @@ if (this.module)
 
   function dragMouseDown(panel, downEvent) {
     downEvent.preventDefault();
+    downEvent.stopPropagation();
 
     var fromSpace = panel.space;
     var rootSpace = fromSpace.getRoot();
