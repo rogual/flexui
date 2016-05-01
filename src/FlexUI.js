@@ -834,14 +834,14 @@ if (this.module)
 
     space.setActivePanel = function(panel) {
 
-      if (panel === null) {
+      if (typeof(panel) == 'number')
+        panel = space.panels[panel];
+
+      if (!panel) {
         space.panelElem = null;
         spaceDelegate.setActivePanel(space, null);
         return;
       }
-
-      if (typeof(panel) == 'number')
-        panel = space.panels[panel];
 
       space.activePanel = panel;
       space.panelElem = space.activePanel.elem;
