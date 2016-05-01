@@ -295,6 +295,7 @@ if (this.module)
 
         prev.style.flexBasis = newPrevSize + 'px';
         next.style.flexBasis = newNextSize + 'px';
+        spaceDelegate.layout();
       }
 
       function up() {
@@ -453,6 +454,8 @@ if (this.module)
      space. */
   FlexUI.tabSpaceDelegate = {
     modified: function(space) {},
+    layout: function() {},
+    focusPanel: function(panel) {},
     init: function(space) {
       space.dd = {};
 
@@ -637,11 +640,12 @@ if (this.module)
       }
     },
     makeTab: function(space, panel) {
-      var tab = makeDiv();
+      var tab = panel.tab = makeDiv();
       tab.className = 'flexui-tab';
       tab.textContent = panel.name;
       tab.onclick = function() {
         space.setActivePanel(panel);
+        spaceDelegate.focusPanel(panel);
       };
       FlexUI.makeDragSource(tab, panel);
 
@@ -705,6 +709,7 @@ if (this.module)
 
   function spaceModified(space) {
     spaceDelegate.modified(space);
+    spaceDelegate.layout();
   }
 
   var spaceDelegate = FlexUI.tabSpaceDelegate;
